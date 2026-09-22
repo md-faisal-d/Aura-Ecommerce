@@ -1,0 +1,18 @@
+# Maven build target
+target/
+/target/
+
+# IDE & Metadata
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+*.iws
+
+# OS & Temp Files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
