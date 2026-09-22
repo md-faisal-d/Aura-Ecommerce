@@ -1,5 +1,3 @@
-// Order.java
-
 package com.fashionstore.model;
 
 import java.math.BigDecimal;
@@ -9,6 +7,7 @@ public class Order {
 
     private int id;
     private int userId;
+    private int addressId;
     private BigDecimal totalAmount;
     private String shippingAddress;
     private String city;
@@ -52,6 +51,14 @@ public class Order {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public BigDecimal getTotalAmount() {

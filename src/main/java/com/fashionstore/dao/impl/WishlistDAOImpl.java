@@ -1,5 +1,3 @@
-// WishlistDAOImpl.java
-
 package com.fashionstore.dao.impl;
 
 import java.sql.Connection;
@@ -14,30 +12,34 @@ import com.fashionstore.util.DBConnection;
 
 public class WishlistDAOImpl implements WishlistDAO {
 
-    private Connection connection;
-
     public WishlistDAOImpl() {
-        connection = DBConnection.getConnection();
+        // Connection management handled per-method
+    }
+
+    private Connection openConnection() {
+        return DBConnection.getConnection();
     }
 
     @Override
     public boolean addToWishlist(int userId, int productId) {
-
+        Connection conn = null;
         boolean status = false;
 
         try {
+            conn = openConnection();
+            if (conn == null) return false;
 
-            String query = "INSERT INTO wishlist(user_id, product_id) VALUES (?, ?)";
-
-            PreparedStatement ps = connection.prepareStatement(query);
+            String query = "INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, userId);
             ps.setInt(2, productId);
 
             status = ps.executeUpdate() > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return status;
@@ -45,22 +47,24 @@ public class WishlistDAOImpl implements WishlistDAO {
 
     @Override
     public boolean removeFromWishlist(int userId, int productId) {
-
+        Connection conn = null;
         boolean status = false;
 
         try {
+            conn = openConnection();
+            if (conn == null) return false;
 
             String query = "DELETE FROM wishlist WHERE user_id=? AND product_id=?";
-
-            PreparedStatement ps = connection.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, userId);
             ps.setInt(2, productId);
 
             status = ps.executeUpdate() > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return status;
@@ -68,42 +72,40 @@ public class WishlistDAOImpl implements WishlistDAO {
 
     @Override
     public List<Product> getWishlistProducts(int userId) {
-
         List<Product> products = new ArrayList<>();
+        Connection conn = null;
 
         try {
+            conn = openConnection();
+            if (conn == null) return products;
 
-            String query = """
-                    SELECT p.* FROM products p
-                    JOIN wishlist w ON p.id = w.product_id
-                    WHERE w.user_id = ?
-                    """;
+            String query =
+                    "SELECT p.* FROM products p " +
+                    "JOIN wishlist w ON p.product_id = w.product_id " +
+                    "WHERE w.user_id = ?";
 
-            PreparedStatement ps = connection.prepareStatement(query);
-
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, userId);
 
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 Product product = new Product();
 
-                product.setId(rs.getInt("id"));
+                product.setId(rs.getInt("product_id"));
                 product.setCategoryId(rs.getInt("category_id"));
                 product.setName(rs.getString("name"));
-                product.setBrand(rs.getString("brand"));
                 product.setDescription(rs.getString("description"));
                 product.setPrice(rs.getBigDecimal("price"));
                 product.setImageUrl(rs.getString("image_url"));
-                product.setFeatured(rs.getBoolean("is_featured"));
                 product.setCreatedAt(rs.getTimestamp("created_at"));
 
                 products.add(product);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return products;
@@ -111,24 +113,25 @@ public class WishlistDAOImpl implements WishlistDAO {
 
     @Override
     public boolean isProductInWishlist(int userId, int productId) {
-
+        Connection conn = null;
         boolean exists = false;
 
         try {
+            conn = openConnection();
+            if (conn == null) return false;
 
             String query = "SELECT * FROM wishlist WHERE user_id=? AND product_id=?";
-
-            PreparedStatement ps = connection.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, userId);
             ps.setInt(2, productId);
 
             ResultSet rs = ps.executeQuery();
-
             exists = rs.next();
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return exists;

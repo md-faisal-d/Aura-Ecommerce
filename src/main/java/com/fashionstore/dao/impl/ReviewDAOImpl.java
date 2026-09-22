@@ -1,5 +1,3 @@
-// ReviewDAOImpl.java
-
 package com.fashionstore.dao.impl;
 
 import java.sql.Connection;
@@ -14,25 +12,25 @@ import com.fashionstore.util.DBConnection;
 
 public class ReviewDAOImpl implements ReviewDAO {
 
-    private Connection connection;
-
     public ReviewDAOImpl() {
-        connection = DBConnection.getConnection();
+        // Connection management handled per-method
+    }
+
+    private Connection openConnection() {
+        return DBConnection.getConnection();
     }
 
     @Override
     public boolean addReview(Review review) {
-
+        Connection conn = null;
         boolean status = false;
 
         try {
+            conn = openConnection();
+            if (conn == null) return false;
 
-            String query = """
-                    INSERT INTO reviews(user_id, product_id, rating, review_text)
-                    VALUES (?, ?, ?, ?)
-                    """;
-
-            PreparedStatement ps = connection.prepareStatement(query);
+            String query = "INSERT INTO reviews (user_id, product_id, rating, review_text) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, review.getUserId());
             ps.setInt(2, review.getProductId());
@@ -40,9 +38,10 @@ public class ReviewDAOImpl implements ReviewDAO {
             ps.setString(4, review.getReviewText());
 
             status = ps.executeUpdate() > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return status;
@@ -50,27 +49,26 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     @Override
     public List<Review> getReviewsByProductId(int productId) {
-
         List<Review> reviews = new ArrayList<>();
+        Connection conn = null;
 
         try {
+            conn = openConnection();
+            if (conn == null) return reviews;
 
-            String query = """
-                    SELECT r.*, u.name AS user_name
-                    FROM reviews r
-                    JOIN users u ON r.user_id = u.id
-                    WHERE r.product_id=?
-                    ORDER BY r.created_at DESC
-                    """;
+            String query =
+                    "SELECT r.*, u.name AS user_name " +
+                    "FROM reviews r " +
+                    "JOIN users u ON r.user_id = u.user_id " +
+                    "WHERE r.product_id=? " +
+                    "ORDER BY r.created_at DESC";
 
-            PreparedStatement ps = connection.prepareStatement(query);
-
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, productId);
 
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 Review review = new Review();
 
                 review.setId(rs.getInt("id"));
@@ -83,9 +81,10 @@ public class ReviewDAOImpl implements ReviewDAO {
 
                 reviews.add(review);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return reviews;
@@ -93,16 +92,15 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     @Override
     public double getAverageRating(int productId) {
-
         double rating = 0;
+        Connection conn = null;
 
         try {
+            conn = openConnection();
+            if (conn == null) return rating;
 
-            String query =
-                    "SELECT AVG(rating) AS average_rating FROM reviews WHERE product_id=?";
-
-            PreparedStatement ps = connection.prepareStatement(query);
-
+            String query = "SELECT AVG(rating) AS average_rating FROM reviews WHERE product_id=?";
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, productId);
 
             ResultSet rs = ps.executeQuery();
@@ -110,9 +108,10 @@ public class ReviewDAOImpl implements ReviewDAO {
             if (rs.next()) {
                 rating = rs.getDouble("average_rating");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return rating;
@@ -120,21 +119,23 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     @Override
     public boolean deleteReview(int reviewId) {
-
+        Connection conn = null;
         boolean status = false;
 
         try {
+            conn = openConnection();
+            if (conn == null) return false;
 
             String query = "DELETE FROM reviews WHERE id=?";
-
-            PreparedStatement ps = connection.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, reviewId);
 
             status = ps.executeUpdate() > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeQuietly(conn);
         }
 
         return status;

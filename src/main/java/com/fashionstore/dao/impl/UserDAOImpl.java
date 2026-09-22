@@ -12,18 +12,17 @@ import com.fashionstore.util.DBConnection;
 
 public class UserDAOImpl implements UserDAO {
 
+    public UserDAOImpl() {
+        // Connection management handled per-method
+    }
+
     private Connection openConnection() {
         return DBConnection.getConnection();
     }
 
     private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
-        try {
-            user.setId(rs.getInt("user_id"));
-        } catch (SQLException e) {
-            user.setId(rs.getInt("id"));
-        }
-
+        user.setId(rs.getInt("user_id"));
         user.setName(rs.getString("name"));
         user.setEmail(rs.getString("email"));
 
@@ -36,11 +35,7 @@ public class UserDAOImpl implements UserDAO {
         try {
             user.setPassword(rs.getString("password_hash"));
         } catch (SQLException e) {
-            try {
-                user.setPassword(rs.getString("password"));
-            } catch (SQLException ignored) {
-                user.setPassword("");
-            }
+            user.setPassword("");
         }
 
         try {
@@ -115,12 +110,11 @@ public class UserDAOImpl implements UserDAO {
             conn = openConnection();
             if (conn == null) return null;
 
-            String query = "SELECT * FROM users WHERE email = ? AND (password_hash = ? OR password_hash = MD5(?))";
+            String query = "SELECT * FROM users WHERE email = ? AND password_hash = ?";
             PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setString(1, email);
             ps.setString(2, password);
-            ps.setString(3, password);
 
             ResultSet rs = ps.executeQuery();
 
@@ -145,11 +139,10 @@ public class UserDAOImpl implements UserDAO {
             conn = openConnection();
             if (conn == null) return null;
 
-            String query = "SELECT * FROM users WHERE user_id = ? OR id = ?";
+            String query = "SELECT * FROM users WHERE user_id = ?";
             PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, userId);
-            ps.setInt(2, userId);
 
             ResultSet rs = ps.executeQuery();
 
@@ -202,13 +195,12 @@ public class UserDAOImpl implements UserDAO {
             conn = openConnection();
             if (conn == null) return false;
 
-            String query = "UPDATE users SET name=?, phone=? WHERE user_id=? OR id=?";
+            String query = "UPDATE users SET name=?, phone=? WHERE user_id=?";
             PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getPhone());
             ps.setInt(3, user.getId());
-            ps.setInt(4, user.getId());
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -229,12 +221,11 @@ public class UserDAOImpl implements UserDAO {
             conn = openConnection();
             if (conn == null) return false;
 
-            String query = "UPDATE users SET password_hash=? WHERE user_id=? OR id=?";
+            String query = "UPDATE users SET password_hash=? WHERE user_id=?";
             PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setString(1, newPassword);
             ps.setInt(2, userId);
-            ps.setInt(3, userId);
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -255,11 +246,10 @@ public class UserDAOImpl implements UserDAO {
             conn = openConnection();
             if (conn == null) return false;
 
-            String query = "DELETE FROM users WHERE user_id=? OR id=?";
+            String query = "DELETE FROM users WHERE user_id=?";
             PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setInt(1, userId);
-            ps.setInt(2, userId);
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
