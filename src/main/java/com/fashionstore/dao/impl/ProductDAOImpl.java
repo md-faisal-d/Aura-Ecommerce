@@ -32,11 +32,23 @@ public class ProductDAOImpl implements ProductDAO {
 
         product.setCategoryId(rs.getInt("category_id"));
         product.setName(rs.getString("name"));
-        product.setBrand(rs.getString("brand"));
+        
+        try {
+            product.setBrand(rs.getString("brand"));
+        } catch (SQLException e) {
+            product.setBrand("Aura");
+        }
+
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getBigDecimal("price"));
         product.setImageUrl(rs.getString("image_url"));
-        product.setFeatured(rs.getBoolean("is_featured"));
+        
+        try {
+            product.setFeatured(rs.getBoolean("is_featured"));
+        } catch (SQLException e) {
+            product.setFeatured(true);
+        }
+
         product.setCreatedAt(rs.getTimestamp("created_at"));
 
         return product;
@@ -103,7 +115,20 @@ public class ProductDAOImpl implements ProductDAO {
             connection = openConnection();
             if (connection == null) return products;
 
-            String query = "SELECT * FROM products WHERE is_featured = 1 OR is_featured = true";
+            try {
+                String query = "SELECT * FROM products WHERE is_featured = 1 OR is_featured = true";
+                PreparedStatement ps = connection.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    products.add(mapProduct(rs));
+                }
+                return products;
+            } catch (SQLException sqle) {
+                // Fallback to all products if is_featured column is not present in database
+            }
+
+            String query = "SELECT * FROM products";
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -153,13 +178,21 @@ public class ProductDAOImpl implements ProductDAO {
             connection = openConnection();
             if (connection == null) return products;
 
-            String query = "SELECT * FROM products WHERE name LIKE ? OR description LIKE ? OR brand LIKE ?";
-            PreparedStatement ps = connection.prepareStatement(query);
             String searchKeyword = "%" + keyword + "%";
+            PreparedStatement ps;
 
-            ps.setString(1, searchKeyword);
-            ps.setString(2, searchKeyword);
-            ps.setString(3, searchKeyword);
+            try {
+                String query = "SELECT * FROM products WHERE name LIKE ? OR description LIKE ? OR brand LIKE ?";
+                ps = connection.prepareStatement(query);
+                ps.setString(1, searchKeyword);
+                ps.setString(2, searchKeyword);
+                ps.setString(3, searchKeyword);
+            } catch (SQLException sqle) {
+                String query = "SELECT * FROM products WHERE name LIKE ? OR description LIKE ?";
+                ps = connection.prepareStatement(query);
+                ps.setString(1, searchKeyword);
+                ps.setString(2, searchKeyword);
+            }
 
             ResultSet rs = ps.executeQuery();
 
@@ -209,7 +242,7 @@ public class ProductDAOImpl implements ProductDAO {
             String color,
             double minPrice,
             double maxPrice,
-            String brand,
+            String brandFilter,
             String sort) {
 
         List<Product> products = new ArrayList<>();
@@ -232,8 +265,15 @@ public class ProductDAOImpl implements ProductDAO {
                 query.append("AND p.category_id = ? ");
             }
 
-            if (brand != null && !brand.isEmpty()) {
-                query.append("AND p.brand = ? ");
+            boolean applyBrand = (brandFilter != null && !brandFilter.isEmpty() && !brandFilter.equalsIgnoreCase("all"));
+            if (applyBrand) {
+                try {
+                    PreparedStatement checkPs = connection.prepareStatement("SELECT brand FROM products LIMIT 1");
+                    checkPs.executeQuery();
+                    query.append("AND p.brand = ? ");
+                } catch (SQLException sqle) {
+                    applyBrand = false;
+                }
             }
 
             if (size != null && !size.isEmpty()) {
@@ -262,8 +302,8 @@ public class ProductDAOImpl implements ProductDAO {
                 ps.setInt(index++, categoryId);
             }
 
-            if (brand != null && !brand.isEmpty()) {
-                ps.setString(index++, brand);
+            if (applyBrand) {
+                ps.setString(index++, brandFilter);
             }
 
             if (size != null && !size.isEmpty()) {
@@ -362,6 +402,10 @@ public class ProductDAOImpl implements ProductDAO {
             System.err.println("[Aura DAO Error] ProductDAOImpl.getAllBrands: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
+        }
+
+        if (brands.isEmpty()) {
+            brands.add("Aura");
         }
 
         return brands;
