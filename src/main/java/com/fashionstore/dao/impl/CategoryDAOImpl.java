@@ -13,13 +13,13 @@ import com.fashionstore.util.DBConnection;
 
 public class CategoryDAOImpl implements CategoryDAO {
 
+    public CategoryDAOImpl() {
+        // Connection management per-method
+    }
+
     private Category mapCategory(ResultSet rs) throws SQLException {
         Category category = new Category();
-        try {
-            category.setId(rs.getInt("category_id"));
-        } catch (SQLException e) {
-            category.setId(rs.getInt("id"));
-        }
+        category.setId(rs.getInt("category_id"));
         category.setName(rs.getString("name"));
         return category;
     }
@@ -43,7 +43,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 categories.add(mapCategory(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CategoryDAO.getAllCategories: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -62,10 +62,9 @@ public class CategoryDAOImpl implements CategoryDAO {
                 return null;
             }
 
-            String query = "SELECT * FROM categories WHERE category_id=? OR id=?";
+            String query = "SELECT * FROM categories WHERE category_id=?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, categoryId);
-            ps.setInt(2, categoryId);
 
             ResultSet rs = ps.executeQuery();
 
@@ -73,7 +72,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 category = mapCategory(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CategoryDAO.getCategoryById: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }

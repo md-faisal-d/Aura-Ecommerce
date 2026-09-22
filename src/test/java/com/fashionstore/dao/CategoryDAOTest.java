@@ -35,6 +35,18 @@ public class CategoryDAOTest {
     }
 
     @Test
+    public void testGetCategoryByIdSuccess() {
+        try (MockedStatic<DBConnection> dbMock = Mockito.mockStatic(DBConnection.class)) {
+            dbMock.when(DBConnection::getConnection).thenAnswer(inv -> TestDatabase.getConnection());
+
+            Category category = categoryDAO.getCategoryById(1);
+            assertNotNull(category, "Category with ID 1 should be found");
+            assertEquals(1, category.getId());
+            assertEquals("Men", category.getName());
+        }
+    }
+
+    @Test
     public void testGetCategoryByIdNotFound() {
         try (MockedStatic<DBConnection> dbMock = Mockito.mockStatic(DBConnection.class)) {
             dbMock.when(DBConnection::getConnection).thenAnswer(inv -> TestDatabase.getConnection());

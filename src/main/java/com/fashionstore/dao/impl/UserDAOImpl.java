@@ -88,12 +88,12 @@ public class UserDAOImpl implements UserDAO {
                         addrPs.setString(8, "India");
                         addrPs.executeUpdate();
                     } catch (Exception addrEx) {
-                        addrEx.printStackTrace();
+                        System.err.println("[Aura DAO Log] UserDAO.registerUser (Address): " + addrEx.getMessage());
                     }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.registerUser: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -122,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
                 user = mapUser(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.loginUser: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -150,7 +150,7 @@ public class UserDAOImpl implements UserDAO {
                 user = mapUser(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.getUserById: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -178,7 +178,7 @@ public class UserDAOImpl implements UserDAO {
                 user = mapUser(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.getUserByEmail: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -204,7 +204,7 @@ public class UserDAOImpl implements UserDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.updateUser: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -229,7 +229,7 @@ public class UserDAOImpl implements UserDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.changePassword: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -253,7 +253,7 @@ public class UserDAOImpl implements UserDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Log] UserDAO.deleteUser: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
