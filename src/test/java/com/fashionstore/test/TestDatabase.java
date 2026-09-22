@@ -46,13 +46,15 @@ public class TestDatabase {
                 stmt.execute("CREATE TABLE products (" +
                         "product_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "name VARCHAR(150) NOT NULL, " +
+                        "brand VARCHAR(100) DEFAULT 'Aura', " +
                         "description TEXT, " +
                         "price DECIMAL(10,2) NOT NULL, " +
                         "category_id INT NOT NULL, " +
+                        "is_featured TINYINT DEFAULT 1, " +
                         "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                         "image_url VARCHAR(500), " +
                         "FOREIGN KEY (category_id) REFERENCES categories(category_id));");
-                stmt.execute("INSERT INTO products (product_id, name, description, price, category_id) VALUES (1, 'Test Shirt', 'A nice tee', 1500.00, 1);");
+                stmt.execute("INSERT INTO products (product_id, name, brand, description, price, category_id, is_featured) VALUES (1, 'Test Shirt', 'Aura', 'A nice tee', 1500.00, 1, 1);");
 
                 stmt.execute("CREATE TABLE product_variants (" +
                         "variant_id INT AUTO_INCREMENT PRIMARY KEY, " +

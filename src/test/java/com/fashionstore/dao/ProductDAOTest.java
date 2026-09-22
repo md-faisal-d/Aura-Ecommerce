@@ -32,7 +32,36 @@ public class ProductDAOTest {
             List<Product> products = productDAO.getAllProducts();
             assertNotNull(products);
             assertFalse(products.isEmpty());
-            assertEquals("Test Shirt", products.get(0).getName());
+
+            Product p = products.get(0);
+            assertEquals("Test Shirt", p.getName());
+            assertEquals("Aura", p.getBrand());
+            assertTrue(p.isFeatured());
+        }
+    }
+
+    @Test
+    public void testGetFeaturedProductsSuccess() {
+        try (MockedStatic<DBConnection> dbMock = Mockito.mockStatic(DBConnection.class)) {
+            dbMock.when(DBConnection::getConnection).thenAnswer(inv -> TestDatabase.getConnection());
+
+            List<Product> featured = productDAO.getFeaturedProducts();
+            assertNotNull(featured);
+            assertFalse(featured.isEmpty());
+            assertTrue(featured.get(0).isFeatured());
+            assertEquals("Aura", featured.get(0).getBrand());
+        }
+    }
+
+    @Test
+    public void testGetAllBrandsSuccess() {
+        try (MockedStatic<DBConnection> dbMock = Mockito.mockStatic(DBConnection.class)) {
+            dbMock.when(DBConnection::getConnection).thenAnswer(inv -> TestDatabase.getConnection());
+
+            List<String> brands = productDAO.getAllBrands();
+            assertNotNull(brands);
+            assertFalse(brands.isEmpty());
+            assertTrue(brands.contains("Aura"));
         }
     }
 
