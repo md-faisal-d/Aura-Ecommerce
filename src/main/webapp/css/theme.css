@@ -1,0 +1,20 @@
+/* Aura — soft, elegant palette (no loud blues) */
+:root {
+    --bg: #f7f5f2;
+    --surface: #ffffff;
+    --text: #2a2a2a;
+    --text-muted: #6b6b6b;
+    --text-light: #9a9a9a;
+    --accent: #8b7355;
+    --accent-hover: #75614a;
+    --accent-soft: rgba(139, 115, 85, 0.12);
+    --accent-secondary: #5a6b5c;
+    --border: #e8e4df;
+    --shadow-sm: 0 2px 8px rgba(42, 42, 42, 0.06);
+    --shadow-md: 0 8px 32px rgba(42, 42, 42, 0.08);
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --nav-bg: #ffffff;
+    --footer-bg: #2a2a2a;
+}

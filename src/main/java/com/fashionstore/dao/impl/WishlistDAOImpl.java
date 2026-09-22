@@ -37,7 +37,7 @@ public class WishlistDAOImpl implements WishlistDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] WishlistDAOImpl.addToWishlist: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -62,7 +62,7 @@ public class WishlistDAOImpl implements WishlistDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] WishlistDAOImpl.removeFromWishlist: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -103,7 +103,7 @@ public class WishlistDAOImpl implements WishlistDAO {
                 products.add(product);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] WishlistDAOImpl.getWishlistProducts: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -129,7 +129,7 @@ public class WishlistDAOImpl implements WishlistDAO {
             ResultSet rs = ps.executeQuery();
             exists = rs.next();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] WishlistDAOImpl.isProductInWishlist: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }

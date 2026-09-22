@@ -38,7 +38,7 @@ public class CartDAOImpl implements CartDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.addToCart: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -63,7 +63,7 @@ public class CartDAOImpl implements CartDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.updateCartItemQuantity: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -87,7 +87,7 @@ public class CartDAOImpl implements CartDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.removeCartItem: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -138,7 +138,7 @@ public class CartDAOImpl implements CartDAO {
                 items.add(item);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.getCartItemsByUserId: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -172,7 +172,7 @@ public class CartDAOImpl implements CartDAO {
                 total = rs.getDouble("total");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.getCartTotal: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -199,7 +199,7 @@ public class CartDAOImpl implements CartDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.clearCart: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -254,7 +254,7 @@ public class CartDAOImpl implements CartDAO {
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.addToCart: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -284,7 +284,7 @@ public class CartDAOImpl implements CartDAO {
                 return rs.getInt("cart_id");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] CartDAO.getCartIdByUser: " + e.getMessage());
         }
         return 0;
     }

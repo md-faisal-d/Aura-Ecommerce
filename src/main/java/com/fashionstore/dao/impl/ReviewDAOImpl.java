@@ -39,7 +39,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ReviewDAOImpl.addReview: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -82,7 +82,7 @@ public class ReviewDAOImpl implements ReviewDAO {
                 reviews.add(review);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ReviewDAOImpl.getReviewsByProductId: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -109,7 +109,7 @@ public class ReviewDAOImpl implements ReviewDAO {
                 rating = rs.getDouble("average_rating");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ReviewDAOImpl.getAverageRating: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -133,7 +133,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ReviewDAOImpl.deleteReview: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }

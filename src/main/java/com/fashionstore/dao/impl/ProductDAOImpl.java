@@ -59,7 +59,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getAllProducts: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -86,7 +86,7 @@ public class ProductDAOImpl implements ProductDAO {
                 product = mapProduct(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getProductById: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -111,7 +111,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getFeaturedProducts: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -136,7 +136,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getNewArrivals: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -167,7 +167,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.searchProducts: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -194,7 +194,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getProductsByCategory: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -280,7 +280,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(mapProduct(rs));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.filterProducts: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -319,7 +319,7 @@ public class ProductDAOImpl implements ProductDAO {
                 variants.add(variant);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getVariantsByProductId: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }
@@ -359,7 +359,7 @@ public class ProductDAOImpl implements ProductDAO {
                 brands.add(rs.getString("brand"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] ProductDAOImpl.getAllBrands: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(connection);
         }

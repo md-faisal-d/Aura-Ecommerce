@@ -91,16 +91,16 @@ public class OrderDAOImpl implements OrderDAO {
                 try {
                     conn.rollback();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.err.println("[Aura DAO Error] OrderDAOImpl.placeOrder (rollback): " + ex.getMessage());
                 }
             }
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] OrderDAOImpl.placeOrder: " + e.getMessage());
         } finally {
             if (conn != null) {
                 try {
                     conn.setAutoCommit(true);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.err.println("[Aura DAO Error] OrderDAOImpl.placeOrder (setAutoCommit): " + ex.getMessage());
                 }
                 DBConnection.closeQuietly(conn);
             }
@@ -147,7 +147,7 @@ public class OrderDAOImpl implements OrderDAO {
                 orders.add(order);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] OrderDAOImpl.getOrdersByUserId: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -191,7 +191,7 @@ public class OrderDAOImpl implements OrderDAO {
                 order.setOrderedAt(rs.getTimestamp("created_at"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] OrderDAOImpl.getOrderById: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -237,7 +237,7 @@ public class OrderDAOImpl implements OrderDAO {
                 items.add(item);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] OrderDAOImpl.getOrderItems: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
@@ -262,7 +262,7 @@ public class OrderDAOImpl implements OrderDAO {
 
             status = ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Aura DAO Error] OrderDAOImpl.updateOrderStatus: " + e.getMessage());
         } finally {
             DBConnection.closeQuietly(conn);
         }
