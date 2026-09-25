@@ -20,7 +20,7 @@ public class DBConnection {
     private static final String PORT = getEnvOrDefault("DB_PORT", "3306");
     private static final String DATABASE = getEnvOrDefault("DB_NAME", "fashion_store");
     private static final String USERNAME = getEnvOrDefault("DB_USER", "root");
-    private static final String PASSWORD = getEnvOrDefault("DB_PASSWORD", "");
+    private static final String PASSWORD = getEnvOrDefault("DB_PASSWORD", "Faisal@2003");
 
     // Reads a value from an environment variable, or falls back to a default
     // if that environment variable hasn't been set on this machine.
